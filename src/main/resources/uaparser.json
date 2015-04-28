@@ -1,1 +1,255 @@
-{"browserType":[{"id":1,"name":"Web Browser"},{"id":2,"name":"Mobile Browser"},{"id":3,"name":"Application"},{"id":4,"name":"Tool"},{"id":5,"name":"Robot"},{"id":10,"name":"UNKNOWN"}],"deviceType":[{"id":1,"name":"Computer"},{"id":2,"name":"Mobile"},{"id":3,"name":"Tablet"},{"id":9,"name":"Other"},{"id":10,"name":"UNKNOWN"}],"operationSystem":[{"deviceType":2,"id":1,"name":"Windows Phone","regex":".*Windows Phone(?: OS | |)([0-9\\\\.]*).*||||.*WP([0-9\\\\.]+).*||||.*Windows Mobile.*||||.*windows ce.*"},{"deviceType":3,"id":2,"name":"Windows RT","regex":".*(?i:w)indows (?i:NT) ([0-9\\\\.]+).*ARM.*"},{"deviceType":1,"id":9,"name":"Windows","regex":".*Win 9x ((4.90)).*||||.*(?i:w)indows[ _-](XP).*||||.*(?i:w)indows[ _-]((?i:me)).*||||.*(?i:w)indows[ _-]((?i:v)ista).*||||.*(?i:w)in(?:|dows)(?:| NT)(?: |_|-|)([0-9\\._]+)||||(?i:w)indows"},{"deviceType":2,"id":10,"name":"iOS(iPhone)","regex":".*iPhone OS[ |]([0-9\\\\._]*).*"},{"deviceType":3,"id":11,"name":"iOS(iPad)","regex":".*iPad.*OS[ |]([0-9\\\\._]+).*"},{"deviceType":1,"id":12,"name":"Mac","regex":".*Mac OS X(?: |)([0-9\\\\.,-_]*).*||||.*[(?i:so)|(?i:os)]=(?i:mac)[ |]([0-9\\\\.,]*).*||||.*mac(?i:os|).*||||.*Darwin.*||||.*Macintosh.*"},{"deviceType":2,"id":50,"name":"WebOS","regex":".*webOS/([0-9\\\\.]+).*||||.*hpwOS/([0-9\\\\.]+).*"},{"deviceType":2,"id":55,"name":"Palm OS","regex":".*Palm OS ([0-9\\\\.]*).*"},{"deviceType":2,"id":60,"name":"MeeGo","regex":".*MeeGo.*"},{"deviceType":2,"id":65,"name":"Bada","regex":".*Bada(?:\\|)([0-9\\\\.]*).*"},{"deviceType":3,"id":70,"name":"Kindle","regex":".*Kindle.*||||.*(?!Android).*Silk-Accelerated.*"},{"deviceType":2,"id":75,"name":"Symbian","regex":".*SymbOS.*"},{"deviceType":1,"id":80,"name":"FreeBSD","regex":".*FreeBSD.*"},{"deviceType":1,"id":81,"name":"DragonFly BSD","regex":".*DragonFly.*"},{"deviceType":1,"id":82,"name":"OpenBSD","regex":".*OpenBSD.*"},{"deviceType":1,"id":83,"name":"NetBSD","regex":".*NetBSD.*"},{"deviceType":1,"id":89,"name":"BSD","regex":".*BSD.*"},{"deviceType":2,"id":90,"name":"Tizen","regex":".*Tizen[ /]([0-9\\\\.]*).*"},{"deviceType":2,"id":95,"name":"BlackBerry","regex":".*BlackBerry.*"},{"deviceType":1,"id":100,"name":"Chrome OS","regex":".*CrOS.*"},{"deviceType":2,"id":110,"name":"Android","regex":".*Android ([0-9\\\\.]*).*||||.*Adr ([0-9\\\\.]*).*"},{"deviceType":1,"id":149,"name":"Linux","regex":".*Linux.*"}],"versionAliases":[{"codename":"98","major":"4","minor":"10","os":9,"regex":"98"},{"codename":"me","major":"4","minor":"90","os":9,"regex":"[4.90|(?i:me)]"},{"codename":"2000","major":"5","minor":"0","os":9,"regex":"[5.0|2000]"},{"codename":"XP","major":"5","minor":"1","os":9,"regex":"[5.1|(?i:xp)]"},{"codename":"Vista","major":"6","minor":"0","os":9,"regex":"[6.0|(?i:vista)]"},{"codename":"7","major":"6","minor":"1","os":9,"regex":"6.1"},{"codename":"8","major":"6","minor":"2","os":9,"regex":"6.2"},{"codename":"8.1","major":"6","minor":"3","os":9,"regex":"6.3"},{"codename":"10","major":"10","minor":"0","os":9,"regex":"10.0"}]}
+{
+  "browserType": [
+    {
+      "id": 1,
+      "name": "Web Browser"
+    },
+    {
+      "id": 2,
+      "name": "Mobile Browser"
+    },
+    {
+      "id": 3,
+      "name": "Application"
+    },
+    {
+      "id": 4,
+      "name": "Tool"
+    },
+    {
+      "id": 5,
+      "name": "Robot"
+    },
+    {
+      "id": 10,
+      "name": "UNKNOWN"
+    }
+  ],
+  "deviceType": [
+    {
+      "id": 1,
+      "name": "Computer"
+    },
+    {
+      "id": 2,
+      "name": "Mobile"
+    },
+    {
+      "id": 3,
+      "name": "Tablet"
+    },
+    {
+      "id": 9,
+      "name": "Other"
+    },
+    {
+      "id": 10,
+      "name": "UNKNOWN"
+    }
+  ],
+  "operationSystem": [
+    {
+      "deviceType": 2,
+      "id": 1,
+      "name": "Windows Phone",
+      "regex": ".*Windows Phone(?: OS | |)([0-9\\\\.]*).*||||.*WP([0-9\\\\.]+).*||||.*Windows Mobile.*||||.*windows ce.*"
+    },
+    {
+      "deviceType": 3,
+      "id": 2,
+      "name": "Windows RT",
+      "regex": ".*(?i:w)indows (?i:NT) ([0-9\\\\.]+).*ARM.*"
+    },
+    {
+      "deviceType": 1,
+      "id": 9,
+      "name": "Windows",
+      "regex": ".*Win 9x ((4.90)).*||||.*(?i:w)indows[ _-](XP).*||||.*(?i:w)indows[ _-]((?i:me)).*||||.*(?i:w)indows[ _-]((?i:v)ista).*||||.*(?i:w)in(?:|dows)(?:| NT)(?: |_|-|)([0-9\\._]+)||||(?i:w)indows"
+    },
+    {
+      "deviceType": 2,
+      "id": 10,
+      "name": "iOS(iPhone)",
+      "regex": ".*iPhone OS[ |]([0-9\\\\._]*).*"
+    },
+    {
+      "deviceType": 3,
+      "id": 11,
+      "name": "iOS(iPad)",
+      "regex": ".*iPad.*OS[ |]([0-9\\\\._]+).*"
+    },
+    {
+      "deviceType": 1,
+      "id": 12,
+      "name": "Mac",
+      "regex": ".*Mac OS X(?: |)([0-9\\\\.,-_]*).*||||.*[(?i:so)|(?i:os)]=(?i:mac)[ |]([0-9\\\\.,]*).*||||.*mac(?i:os|).*||||.*Darwin.*||||.*Macintosh.*"
+    },
+    {
+      "deviceType": 2,
+      "id": 50,
+      "name": "WebOS",
+      "regex": ".*webOS/([0-9\\\\.]+).*||||.*hpwOS/([0-9\\\\.]+).*"
+    },
+    {
+      "deviceType": 2,
+      "id": 55,
+      "name": "Palm OS",
+      "regex": ".*Palm OS ([0-9\\\\.]*).*"
+    },
+    {
+      "deviceType": 2,
+      "id": 60,
+      "name": "MeeGo",
+      "regex": ".*MeeGo.*"
+    },
+    {
+      "deviceType": 2,
+      "id": 65,
+      "name": "Bada",
+      "regex": ".*Bada(?:\\|)([0-9\\\\.]*).*"
+    },
+    {
+      "deviceType": 3,
+      "id": 70,
+      "name": "Kindle",
+      "regex": ".*Kindle.*||||.*(?!Android).*Silk-Accelerated.*"
+    },
+    {
+      "deviceType": 2,
+      "id": 75,
+      "name": "Symbian",
+      "regex": ".*SymbOS.*"
+    },
+    {
+      "deviceType": 1,
+      "id": 80,
+      "name": "FreeBSD",
+      "regex": ".*FreeBSD.*"
+    },
+    {
+      "deviceType": 1,
+      "id": 81,
+      "name": "DragonFly BSD",
+      "regex": ".*DragonFly.*"
+    },
+    {
+      "deviceType": 1,
+      "id": 82,
+      "name": "OpenBSD",
+      "regex": ".*OpenBSD.*"
+    },
+    {
+      "deviceType": 1,
+      "id": 83,
+      "name": "NetBSD",
+      "regex": ".*NetBSD.*"
+    },
+    {
+      "deviceType": 1,
+      "id": 89,
+      "name": "BSD",
+      "regex": ".*BSD.*"
+    },
+    {
+      "deviceType": 2,
+      "id": 90,
+      "name": "Tizen",
+      "regex": ".*Tizen[ /]([0-9\\\\.]*).*"
+    },
+    {
+      "deviceType": 2,
+      "id": 95,
+      "name": "BlackBerry",
+      "regex": ".*BlackBerry.*"
+    },
+    {
+      "deviceType": 1,
+      "id": 100,
+      "name": "Chrome OS",
+      "regex": ".*CrOS.*"
+    },
+    {
+      "deviceType": 2,
+      "id": 110,
+      "name": "Android",
+      "regex": ".*Android ([0-9\\\\.]*).*||||.*Adr ([0-9\\\\.]*).*"
+    },
+    {
+      "deviceType": 1,
+      "id": 149,
+      "name": "Linux",
+      "regex": ".*Linux.*"
+    }
+  ],
+  "operationSystemVersionAliases": [
+    {
+      "codename": "Memphis",
+      "major": "98",
+      "minor": "",
+      "os": 9,
+      "regex": "98"
+    },
+    {
+      "codename": "Millennium",
+      "major": "me",
+      "minor": "",
+      "os": 9,
+      "regex": "[4.90|(?i:me)]"
+    },
+    {
+      "codename": "2000",
+      "major": "2000",
+      "minor": "",
+      "os": 9,
+      "regex": "[5.0|5.01|2000]"
+    },
+    {
+      "codename": "Whistler",
+      "major": "XP",
+      "minor": "",
+      "os": 9,
+      "regex": "[5.1|(?i:xp)]"
+    },
+    {
+      "codename": "Whistler Server",
+      "major": "2003 Server",
+      "os": 9,
+      "regex": "5.2"
+    },
+    {
+      "codename": "Longhorn",
+      "major": "Vista",
+      "minor": "",
+      "os": 9,
+      "regex": "[6.0|(?i:vista)]"
+    },
+    {
+      "codename": "Vienna",
+      "major": "7",
+      "minor": "",
+      "os": 9,
+      "regex": "6.1"
+    },
+    {
+      "codename": "Metro",
+      "major": "8",
+      "minor": "",
+      "os": 9,
+      "regex": "6.2"
+    },
+    {
+      "codename": "Blue",
+      "major": "8",
+      "minor": "1",
+      "os": 9,
+      "regex": "6.3"
+    },
+    {
+      "codename": "Threshold",
+      "major": "10",
+      "minor": "",
+      "os": 9,
+      "regex": "10.0"
+    }
+  ]
+}

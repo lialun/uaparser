@@ -1,7 +1,5 @@
 package li.allan.domain;
 
-import li.allan.UAParserUtils;
-
 public class Version {
     private String major;
     private String minor;
@@ -34,10 +32,12 @@ public class Version {
         if (o == null || getClass() != o.getClass()) return false;
 
         Version version = (Version) o;
-        if (!UAParserUtils.nullToEmpty(major).equals(UAParserUtils.nullToEmpty(version.major))) return false;
-        if (!UAParserUtils.nullToEmpty(minor).equals(UAParserUtils.nullToEmpty(version.minor))) return false;
-        if (!UAParserUtils.nullToEmpty(revision).equals(UAParserUtils.nullToEmpty(version.revision))) return false;
-        return (!UAParserUtils.nullToEmpty(codeName).equals(UAParserUtils.nullToEmpty(version.codeName)));
+
+        if (major != null ? !major.equals(version.major) : version.major != null) return false;
+        if (minor != null ? !minor.equals(version.minor) : version.minor != null) return false;
+        if (revision != null ? !revision.equals(version.revision) : version.revision != null) return false;
+        return !(codeName != null ? !codeName.equals(version.codeName) : version.codeName != null);
+
     }
 
     @Override
@@ -54,7 +54,11 @@ public class Version {
     }
 
     public void setMajor(String major) {
-        this.major = major;
+        if (major == null) {
+            this.major = "";
+        } else {
+            this.major = major;
+        }
     }
 
     public String getMinor() {
@@ -62,7 +66,11 @@ public class Version {
     }
 
     public void setMinor(String minor) {
-        this.minor = minor;
+        if (minor == null) {
+            this.minor = "";
+        } else {
+            this.minor = minor;
+        }
     }
 
     public String getRevision() {
@@ -70,7 +78,11 @@ public class Version {
     }
 
     public void setRevision(String revision) {
-        this.revision = revision;
+        if (revision == null) {
+            this.revision = "";
+        } else {
+            this.revision = revision;
+        }
     }
 
     public String getCodeName() {
@@ -78,6 +90,10 @@ public class Version {
     }
 
     public void setCodeName(String codeName) {
-        this.codeName = codeName;
+        if (codeName == null) {
+            this.codeName = "";
+        } else {
+            this.codeName = codeName;
+        }
     }
 }

@@ -6,17 +6,23 @@ public class OperationSystem implements Cloneable {
     private DeviceType deviceType;
     private Version version;
 
-    public OperationSystem() {
-    }
-
-    public OperationSystem(String name, DeviceType deviceType, Version version) {
+    public OperationSystem(int id, String name, DeviceType deviceType, Version version) {
+        this.id = id;
         this.name = name;
         this.deviceType = deviceType;
         this.version = version;
     }
 
     public static OperationSystem known() {
-        return new OperationSystem("known", null, null);
+        return new OperationSystem(0, "known", null, null);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -46,14 +52,22 @@ public class OperationSystem implements Cloneable {
     @Override
     public String toString() {
         return "OperationSystem{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", deviceType=" + deviceType +
                 ", version=" + version +
                 '}';
     }
 
+
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return (OperationSystem) super.clone();
+    public Object clone() {
+        OperationSystem cloneObj = null;
+        try {
+            cloneObj = (OperationSystem) super.clone();
+        } catch (CloneNotSupportedException e) {
+            // impossible,do nothing
+        }
+        return cloneObj;
     }
 }

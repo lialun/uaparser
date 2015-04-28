@@ -9,19 +9,31 @@ import li.allan.exception.UAParserException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class UAData {
 
     private static boolean isLoad = false;
     private static Map<String, Browser> browserMap;
     private static Map<String, OperationSystem> operationSystemMap;
-    private static Map<Integer, OperationSystemVersionAlias> operationSystemVersionAliasMap;
+    private static Map<Integer, List<OperationSystemVersionAlias>> operationSystemVersionAliasMap;
 
     static {
         load();
+    }
+
+    public static Map<String, OperationSystem> getOperationSystemMap() {
+        if (isLoad == false) {
+            load();
+        }
+        return operationSystemMap;
+    }
+
+    public static Map<Integer, List<OperationSystemVersionAlias>> getOperationSystemVersionAliasMap() {
+        if (isLoad == false) {
+            load();
+        }
+        return operationSystemVersionAliasMap;
     }
 
     private static void load() {
@@ -29,7 +41,7 @@ public class UAData {
             synchronized (UAData.class) {
                 if (!isLoad) {
                     try {
-                        String source = readFromResources("uaparser.json1");
+                        String source = readFromResources("uaparser.json");
                         JSON_PACKAGE jsonPackage = findJsonPackage();
                         if (jsonPackage.equals(JSON_PACKAGE.FASTJSON)) {
                             parseByFastJson(source);
@@ -84,11 +96,27 @@ public class UAData {
         for (int i = 0; i < operationSystems.size(); i++) {
             JSONObject operationSystem = operationSystems.getJSONObject(i);
             String[] regexs = operationSystem.getString("regex").split("\\|\\|\\|\\|");
-            OperationSystem os = new OperationSystem(operationSystem.getString("name"),
+            OperationSystem os = new OperationSystem(operationSystem.getInteger("id"), operationSystem.getString("name"),
                     deviceTypeMap.get(operationSystem.getInteger("deviceType")), null);
             for (String regex : regexs) {
                 operationSystemMap.put(regex, os);
             }
+        }
+        //operationSystem version alias
+        operationSystemVersionAliasMap = new HashMap<Integer, List<OperationSystemVersionAlias>>();
+        JSONArray operationSysytemVersionAliases = data.getJSONArray("operationSystemVersionAliases");
+        for (int i = 0; i < operationSysytemVersionAliases.size(); i++) {
+            JSONObject alias = operationSysytemVersionAliases.getJSONObject(i);
+            Version version = new Version();
+            version.setMajor(alias.getString("major"));
+            version.setMinor(alias.getString("minor"));
+            version.setRevision(alias.getString("revision"));
+            version.setCodeName(alias.getString("codename"));
+            OperationSystemVersionAlias a = new OperationSystemVersionAlias(alias.getIntValue("os"), alias.getString("regex"), version);
+            if (!operationSystemVersionAliasMap.containsKey(alias.getIntValue("os"))) {
+                operationSystemVersionAliasMap.put(alias.getIntValue("os"), new ArrayList<OperationSystemVersionAlias>());
+            }
+            operationSystemVersionAliasMap.get(alias.getIntValue("os")).add(a);
         }
     }
 
@@ -118,6 +146,6 @@ public class UAData {
     }
 
     private enum JSON_PACKAGE {
-        FASTJSON, JACKSON, ORG_JSON;
+        FASTJSON, JACKSON, ORG_JSON
     }
 }
