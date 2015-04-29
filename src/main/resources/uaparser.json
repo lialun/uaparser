@@ -194,21 +194,21 @@
       "major": "me",
       "minor": "",
       "os": 9,
-      "regex": "[4.90|(?i:me)]"
+      "regex": "(4.90|(?i:me))"
     },
     {
-      "codename": "2000",
+      "codename": "NT 5.0",
       "major": "2000",
       "minor": "",
       "os": 9,
-      "regex": "[5.0|5.01|2000]"
+      "regex": "(5.0|5.01|2000)"
     },
     {
       "codename": "Whistler",
       "major": "XP",
       "minor": "",
       "os": 9,
-      "regex": "[5.1|(?i:xp)]"
+      "regex": "(5.1|(?i:xp))"
     },
     {
       "codename": "Whistler Server",
@@ -221,7 +221,7 @@
       "major": "Vista",
       "minor": "",
       "os": 9,
-      "regex": "[6.0|(?i:vista)]"
+      "regex": "(6.0|(?i:vista))"
     },
     {
       "codename": "Vienna",

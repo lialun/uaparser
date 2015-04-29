@@ -6,6 +6,10 @@ public class OperationSystem implements Cloneable {
     private DeviceType deviceType;
     private Version version;
 
+    public OperationSystem(String name, Version version) {
+        this(0, name, null, version);
+    }
+
     public OperationSystem(int id, String name, DeviceType deviceType, Version version) {
         this.id = id;
         this.name = name;

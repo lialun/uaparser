@@ -1,19 +1,19 @@
 package li.allan.domain;
 
 public class Version {
-    private String major;
-    private String minor;
-    private String revision;
-    private String codeName;
+    private String major = "";
+    private String minor = "";
+    private String revision = "";
+    private String codeName = "";
 
     public Version() {
     }
 
     public Version(String major, String minor, String revision, String codeName) {
-        this.major = major;
-        this.minor = minor;
-        this.revision = revision;
-        this.codeName = codeName;
+        setMajor(major);
+        setMinor(minor);
+        setRevision(revision);
+        setCodeName(codeName);
     }
 
     @Override
@@ -54,9 +54,7 @@ public class Version {
     }
 
     public void setMajor(String major) {
-        if (major == null) {
-            this.major = "";
-        } else {
+        if (major != null) {
             this.major = major;
         }
     }
@@ -66,9 +64,7 @@ public class Version {
     }
 
     public void setMinor(String minor) {
-        if (minor == null) {
-            this.minor = "";
-        } else {
+        if (minor != null) {
             this.minor = minor;
         }
     }
@@ -78,9 +74,7 @@ public class Version {
     }
 
     public void setRevision(String revision) {
-        if (revision == null) {
-            this.revision = "";
-        } else {
+        if (revision != null) {
             this.revision = revision;
         }
     }
@@ -90,9 +84,7 @@ public class Version {
     }
 
     public void setCodeName(String codeName) {
-        if (codeName == null) {
-            this.codeName = "";
-        } else {
+        if (codeName != null) {
             this.codeName = codeName;
         }
     }
