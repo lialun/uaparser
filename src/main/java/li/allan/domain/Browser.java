@@ -1,18 +1,41 @@
 package li.allan.domain;
 
-/**
- * Created by alun on 2015/4/15.
- */
 public class Browser {
-	private String name;
-	private Version version;
-	private BrowserType browserType;
-	private String[] regex;
+    private String name;
+    private Version version;
+    private BrowserType browserType;
 
-//	public static void main(String[] args) {
-//		String source = "Windows 7";
-//		String regex = "(?i:w)indows[ |_]((?i:\\w*))";
-//		System.out.println(RegexUtils.getMatcher(regex, source));
-//		System.out.println(RegexUtils.getMatcherCaptured(regex,source));
-//	}
+    public Browser(String name, Version version) {
+        this(name, version, null);
+    }
+
+    public Browser(String name, Version version, BrowserType browserType) {
+        this.name = name;
+        this.version = version;
+        this.browserType = browserType;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Version getVersion() {
+        return version;
+    }
+
+    public void setVersion(Version version) {
+        this.version = version;
+    }
+
+    public BrowserType getBrowserType() {
+        return browserType;
+    }
+
+    public void setBrowserType(BrowserType browserType) {
+        this.browserType = browserType;
+    }
 }
