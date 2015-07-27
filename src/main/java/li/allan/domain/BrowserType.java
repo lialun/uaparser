@@ -4,30 +4,54 @@ package li.allan.domain;
  * Created by alun on 2015/4/15.
  */
 public class BrowserType {
-	int id;
-	String name;
+    private int id;
+    private String name;
 
-	public BrowserType() {
-	}
+    public BrowserType(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
-	BrowserType(int id, String name) {
-		this.id = id;
-		this.name = name;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Override
+    public String toString() {
+        return "BrowserType{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BrowserType)) return false;
+
+        BrowserType that = (BrowserType) o;
+
+        if (id != that.id) return false;
+        return name.equals(that.name);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + name.hashCode();
+        return result;
+    }
 }

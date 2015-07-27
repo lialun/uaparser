@@ -1,52 +1,17 @@
 package li.allan.domain;
 
 public class Version {
-    private String major = "";
-    private String minor = "";
-    private String revision = "";
-    private String codeName = "";
+    public String major;
+    public String minor;
+    public String revision;
 
     public Version() {
     }
 
-    public Version(String major, String minor, String revision, String codeName) {
-        setMajor(major);
-        setMinor(minor);
-        setRevision(revision);
-        setCodeName(codeName);
-    }
-
-    @Override
-    public String toString() {
-        return "Version{" +
-                "major='" + major + '\'' +
-                ", minor='" + minor + '\'' +
-                ", revision='" + revision + '\'' +
-                ", codeName='" + codeName + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Version version = (Version) o;
-
-        if (major != null ? !major.equals(version.major) : version.major != null) return false;
-        if (minor != null ? !minor.equals(version.minor) : version.minor != null) return false;
-        if (revision != null ? !revision.equals(version.revision) : version.revision != null) return false;
-        return !(codeName != null ? !codeName.equals(version.codeName) : version.codeName != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = major != null ? major.hashCode() : 0;
-        result = 31 * result + (minor != null ? minor.hashCode() : 0);
-        result = 31 * result + (revision != null ? revision.hashCode() : 0);
-        result = 31 * result + (codeName != null ? codeName.hashCode() : 0);
-        return result;
+    public Version(String major, String minor, String revision) {
+        this.major = major;
+        this.minor = minor;
+        this.revision = revision;
     }
 
     public String getMajor() {
@@ -79,13 +44,33 @@ public class Version {
         }
     }
 
-    public String getCodeName() {
-        return codeName;
+    @Override
+    public String toString() {
+        return "Version{" +
+                "major='" + major + '\'' +
+                ", minor='" + minor + '\'' +
+                ", revision='" + revision + '\'' +
+                '}';
     }
 
-    public void setCodeName(String codeName) {
-        if (codeName != null) {
-            this.codeName = codeName;
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Version)) return false;
+
+        Version version = (Version) o;
+
+        if (major != null ? !major.equals(version.major) : version.major != null) return false;
+        if (minor != null ? !minor.equals(version.minor) : version.minor != null) return false;
+        return !(revision != null ? !revision.equals(version.revision) : version.revision != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = major != null ? major.hashCode() : 0;
+        result = 31 * result + (minor != null ? minor.hashCode() : 0);
+        result = 31 * result + (revision != null ? revision.hashCode() : 0);
+        return result;
     }
 }

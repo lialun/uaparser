@@ -1,32 +1,19 @@
 package li.allan.domain;
 
+import li.allan.Constants;
+
 public class OperationSystem implements Cloneable {
-    private int id;
     private String name;
     private DeviceType deviceType;
     private Version version;
 
-    public OperationSystem(String name, Version version) {
-        this(0, name, null, version);
-    }
-
-    public OperationSystem(int id, String name, DeviceType deviceType, Version version) {
-        this.id = id;
+    public OperationSystem(String name, DeviceType deviceType) {
         this.name = name;
         this.deviceType = deviceType;
-        this.version = version;
     }
 
     public static OperationSystem known() {
-        return new OperationSystem(0, "known", null, null);
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+        return new OperationSystem(Constants.KNOWN, null);
     }
 
     public String getName() {
@@ -56,13 +43,33 @@ public class OperationSystem implements Cloneable {
     @Override
     public String toString() {
         return "OperationSystem{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", deviceType=" + deviceType +
                 ", version=" + version +
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OperationSystem)) return false;
+
+        OperationSystem that = (OperationSystem) o;
+
+        if (!name.equals(that.name)) return false;
+        if (deviceType != null ? !deviceType.equals(that.deviceType) : that.deviceType != null)
+            return false;
+        return !(version != null ? !version.equals(that.version) : that.version != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + (deviceType != null ? deviceType.hashCode() : 0);
+        result = 31 * result + (version != null ? version.hashCode() : 0);
+        return result;
+    }
 
     @Override
     public Object clone() {

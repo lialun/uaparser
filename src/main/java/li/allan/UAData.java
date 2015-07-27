@@ -1,63 +1,62 @@
 package li.allan;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import li.allan.domain.*;
-import li.allan.exception.UAParserException;
+import li.allan.json.FastJsonImpl;
+import li.allan.json.GsonImpl;
+import li.allan.json.JacksonImpl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-public class UAData {
+class UAData {
+    private static UAData uaData;
 
-    private static boolean isLoad = false;
-    private static Map<String, Browser> browserMap;
-    private static Map<String, OperationSystem> operationSystemMap;
-    private static Map<Integer, List<OperationSystemVersionAlias>> operationSystemVersionAliasMap;
-
-    static {
-        load();
-    }
-
-    public static Map<String, OperationSystem> getOperationSystemMap() {
-        if (isLoad == false) {
-            load();
-        }
-        return operationSystemMap;
-    }
-
-    public static Map<Integer, List<OperationSystemVersionAlias>> getOperationSystemVersionAliasMap() {
-        if (isLoad == false) {
-            load();
-        }
-        return operationSystemVersionAliasMap;
-    }
-
-    private static void load() {
-        if (!isLoad) {
-            synchronized (UAData.class) {
-                if (!isLoad) {
-                    try {
-                        String source = readFromResources("uaparser.json");
-                        JSON_PACKAGE jsonPackage = findJsonPackage();
-                        if (jsonPackage.equals(JSON_PACKAGE.FASTJSON)) {
-                            parseByFastJson(source);
-                        } else if (jsonPackage.equals(JSON_PACKAGE.JACKSON)) {
-
-                        } else {
-
-                        }
-                        isLoad = true;
-                    } catch (Exception e) {
-                        throw new UAParserException("ERROR loading UAParser data file", e);
-                    }
-                }
+    private UAData(String configPath) {
+        try {
+            String source = readFromResources(configPath);
+            JSON_PACKAGE jsonPackage = findJsonPackage();
+            if (jsonPackage.equals(JSON_PACKAGE.FASTJSON)) {
+                load(FastJsonImpl.parseData(source));
+            } else if (jsonPackage.equals(JSON_PACKAGE.JACKSON)) {
+                load(JacksonImpl.parseData(source));
+            } else {
+                load(GsonImpl.parseData(source));
             }
+        } catch (IOException e) {
+            throw new RuntimeException("ERROR loading UAparser data file", e);
         }
     }
+
+    private static UAData getInstance() {
+        if (uaData == null) {
+            uaData = new UAData("uaparser.json");
+        }
+        return uaData;
+    }
+
+    public static Map<String[], UserAgent> getUserAgentMap() {
+        return getInstance().userAgentMap;
+    }
+
+    public static Map<String[], OperationSystem> getOperationSystemMap() {
+        return getInstance().operationSystemMap;
+    }
+
+    public static Map<String, Map<String, Version>> getOperationSystemVersionAliasMap() {
+        return getInstance().operationSystemVersionAliasMap;
+    }
+
+    private Map<String[], UserAgent> userAgentMap;//Map<regex[], useragent>
+    private Map<String[], OperationSystem> operationSystemMap;//Map<regex[],os>
+    private Map<String, Map<String, Version>> operationSystemVersionAliasMap;//Map<osName, Map<versionRegex,Version>>
 
     private static String readFromResources(String path) throws IOException {
         InputStream inputStream = ClassLoader.getSystemResourceAsStream(path);
@@ -71,52 +70,52 @@ public class UAData {
         return new String(outStream.toByteArray(), "UTF-8");
     }
 
-    /**
-     * parse data file by fastjson
-     *
-     * @param source
-     */
-    private static void parseByFastJson(String source) {
-        JSONObject data = JSONObject.parseObject(source);
+    private void parseByGson(String source) throws IOException {
+        Type mapType = new TypeToken<Map<String, List<Map<String, String>>>>() {
+        }.getType();
+        Map<String, List<Map<String, String>>> data = new Gson().fromJson(source, mapType);
+        load(data);
+    }
+
+    private void load(Map<String, List<Map<String, String>>> data) {
         //browserType
         Map<Integer, BrowserType> browserTypeMap = new HashMap<Integer, BrowserType>();
-        for (int i = 0; i < data.getJSONArray("browserType").size(); i++) {
-            JSONObject browserType = data.getJSONArray("browserType").getJSONObject(i);
-            browserTypeMap.put(browserType.getIntValue("id"), JSON.parseObject(browserType.toJSONString(), BrowserType.class));
+        for (int i = 0; i < data.get("browserType").size(); i++) {
+            Map<String, String> tmp = data.get("browserType").get(i);
+            System.out.print(Integer.valueOf(tmp.get("id")));
+            browserTypeMap.put(Integer.valueOf(tmp.get("id")), new BrowserType(Integer.valueOf(tmp.get("id")), tmp.get("name")));
+        }
+        //browser
+        userAgentMap = new LinkedHashMap<String[], UserAgent>();
+        for (int i = 0; i < data.get("browser").size(); i++) {
+            Map<String, String> tmp = data.get("browser").get(i);
+            String[] regexs = tmp.get("regex").toString().split("\\|\\|\\|\\|");
+            UserAgent b = new UserAgent(tmp.get("name"), browserTypeMap.get(tmp.get("browserType")), tmp.get("homepage"));
+            userAgentMap.put(regexs, b);
         }
         //deviceType
         Map<Integer, DeviceType> deviceTypeMap = new HashMap<Integer, DeviceType>();
-        for (int i = 0; i < data.getJSONArray("deviceType").size(); i++) {
-            JSONObject deviceType = data.getJSONArray("deviceType").getJSONObject(i);
-            deviceTypeMap.put(deviceType.getIntValue("id"), JSON.parseObject(deviceType.toJSONString(), DeviceType.class));
+        for (int i = 0; i < data.get("deviceType").size(); i++) {
+            Map<String, String> tmp = data.get("deviceType").get(i);
+            deviceTypeMap.put(Integer.valueOf(tmp.get("id")), new DeviceType(Integer.valueOf(tmp.get("id")), (String) tmp.get("name")));
         }
         //operationSystem
-        operationSystemMap = new LinkedHashMap<String, OperationSystem>();
-        JSONArray operationSystems = data.getJSONArray("operationSystem");
-        for (int i = 0; i < operationSystems.size(); i++) {
-            JSONObject operationSystem = operationSystems.getJSONObject(i);
-            String[] regexs = operationSystem.getString("regex").split("\\|\\|\\|\\|");
-            OperationSystem os = new OperationSystem(operationSystem.getInteger("id"), operationSystem.getString("name"),
-                    deviceTypeMap.get(operationSystem.getInteger("deviceType")), null);
-            for (String regex : regexs) {
-                operationSystemMap.put(regex, os);
-            }
+        operationSystemMap = new LinkedHashMap<String[], OperationSystem>();
+        for (int i = 0; i < data.get("operationSystem").size(); i++) {
+            Map<String, String> tmp = data.get("operationSystem").get(i);
+            String[] regexs = tmp.get("regex").toString().split("\\|\\|\\|\\|");
+            OperationSystem os = new OperationSystem(tmp.get("name"), deviceTypeMap.get(tmp.get("deviceType")));
+            operationSystemMap.put(regexs, os);
         }
         //operationSystem version alias
-        operationSystemVersionAliasMap = new HashMap<Integer, List<OperationSystemVersionAlias>>();
-        JSONArray operationSysytemVersionAliases = data.getJSONArray("operationSystemVersionAliases");
-        for (int i = 0; i < operationSysytemVersionAliases.size(); i++) {
-            JSONObject alias = operationSysytemVersionAliases.getJSONObject(i);
-            Version version = new Version();
-            version.setMajor(alias.getString("major"));
-            version.setMinor(alias.getString("minor"));
-            version.setRevision(alias.getString("revision"));
-            version.setCodeName(alias.getString("codename"));
-            OperationSystemVersionAlias a = new OperationSystemVersionAlias(alias.getIntValue("os"), alias.getString("regex"), version);
-            if (!operationSystemVersionAliasMap.containsKey(alias.getIntValue("os"))) {
-                operationSystemVersionAliasMap.put(alias.getIntValue("os"), new ArrayList<OperationSystemVersionAlias>());
+        operationSystemVersionAliasMap = new HashMap<String, Map<String, Version>>();
+        for (int i = 0; i < data.get("operationSystemVersionAliases").size(); i++) {
+            Map<String, String> tmp = data.get("operationSystemVersionAliases").get(i);
+            if (!operationSystemVersionAliasMap.containsKey(tmp.get("os"))) {
+                operationSystemVersionAliasMap.put(tmp.get("os"), new HashMap<String, Version>());
             }
-            operationSystemVersionAliasMap.get(alias.getIntValue("os")).add(a);
+            Version version = new Version(tmp.get("major"), tmp.get("minor"), tmp.get("revision"));
+            operationSystemVersionAliasMap.get(tmp.get("os")).put(tmp.get("regex"), version);
         }
     }
 
@@ -126,26 +125,28 @@ public class UAData {
      * @return
      * @throws ClassNotFoundException
      */
-    private static JSON_PACKAGE findJsonPackage() throws ClassNotFoundException {
+    private JSON_PACKAGE findJsonPackage() {
         try {
             Class.forName("com.alibaba.fastjson.JSONObject");
             return JSON_PACKAGE.FASTJSON;
         } catch (ClassNotFoundException e) {
         }
         try {
-            Class.forName("jaskson");
+            Class.forName("com.fasterxml.jackson.databind.ObjectMapper");
             return JSON_PACKAGE.JACKSON;
         } catch (ClassNotFoundException e) {
         }
         try {
-            Class.forName("org.json.JSONObject");
-            return JSON_PACKAGE.ORG_JSON;
+            Class.forName("com.google.gson.Gson");
+            return JSON_PACKAGE.GSON;
         } catch (ClassNotFoundException e) {
         }
-        throw new ClassNotFoundException("you mast import one of fastjson,jackson,org.json");
+        throw new RuntimeException("you must import one of FastJson, Jackson2.x, Gson");
     }
 
-    private enum JSON_PACKAGE {
-        FASTJSON, JACKSON, ORG_JSON
+    enum JSON_PACKAGE {
+        FASTJSON, JACKSON, GSON
     }
+
+
 }
