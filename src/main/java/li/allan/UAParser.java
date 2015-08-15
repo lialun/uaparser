@@ -1,7 +1,7 @@
 package li.allan;
 
 import li.allan.domain.Client;
-import li.allan.domain.OperationSystem;
+import li.allan.domain.OS;
 import li.allan.domain.UserAgent;
 import li.allan.domain.Version;
 import li.allan.utils.RegexUtils;
@@ -11,49 +11,57 @@ import java.util.Map;
 public class UAParser {
 
     public static Client parse(String agentString) {
-        OperationSystem operationSystem = parseOperationSystem(agentString);
+        OS OS = parseOperationSystem(agentString);
         UserAgent userAgent = parseBrowser(agentString);
-        Client client = new Client(operationSystem, userAgent);
+        Client client = new Client(OS, userAgent);
         return client;
     }
 
     public static UserAgent parseBrowser(String userAgent) {
         UserAgent browser = UserAgent.known();
+        if (userAgent == null || userAgent.length() == 0) {
+            return browser;
+        }
+        outer:
         for (Map.Entry<String[], UserAgent> osEntry : UAData.getUserAgentMap().entrySet()) {
             for (String regex : osEntry.getKey()) {
                 if (RegexUtils.isFind(regex, userAgent)) {
                     browser = (UserAgent) osEntry.getValue().clone();
                     String versionString = RegexUtils.getMatcherCapturedNoException(regex, userAgent);
                     browser.setVersion(parseBrowserVersion(versionString));
-                    break;
+                    break outer;
                 }
             }
         }
         return browser;
     }
 
-    public static OperationSystem parseOperationSystem(String userAgent) {
-        OperationSystem operationSystem = OperationSystem.known();
-        for (Map.Entry<String[], OperationSystem> osEntry : UAData.getOperationSystemMap().entrySet()) {
+    public static OS parseOperationSystem(String userAgent) {
+        OS os = OS.known();
+        if (userAgent == null || userAgent.length() == 0) {
+            return os;
+        }
+        outer:
+        for (Map.Entry<String[], OS> osEntry : UAData.getOSMap().entrySet()) {
             for (String regex : osEntry.getKey()) {
                 if (RegexUtils.isFind(regex, userAgent)) {
-                    operationSystem = (OperationSystem) osEntry.getValue().clone();
+                    os = (OS) osEntry.getValue().clone();
                     String versionString = RegexUtils.getMatcherCapturedNoException(regex, userAgent);
-                    operationSystem.setVersion(parseOperationSystemVersion(versionString, operationSystem));
-                    break;
+                    os.setVersion(parseOperationSystemVersion(versionString, os));
+                    break outer;
                 }
             }
         }
-        return operationSystem;
+        return os;
     }
 
     private static Version parseBrowserVersion(String version) {
         return versionStringFormat(version);
     }
 
-    private static Version parseOperationSystemVersion(String version, OperationSystem operationSystem) {
-        if (UAData.getOperationSystemVersionAliasMap().containsKey(operationSystem.getName())) {
-            for (Map.Entry<String, Version> versionAliasEntry : UAData.getOperationSystemVersionAliasMap().get(operationSystem.getName()).entrySet()) {
+    private static Version parseOperationSystemVersion(String version, OS OS) {
+        if (UAData.getOSVersionAliasMap().containsKey(OS.getName())) {
+            for (Map.Entry<String, Version> versionAliasEntry : UAData.getOSVersionAliasMap().get(OS.getName()).entrySet()) {
                 if (RegexUtils.isMatch(versionAliasEntry.getKey(), version)) {
                     return versionAliasEntry.getValue();
                 }

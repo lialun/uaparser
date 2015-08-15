@@ -1,7 +1,5 @@
 package li.allan;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import li.allan.domain.*;
 import li.allan.json.FastJsonImpl;
 import li.allan.json.GsonImpl;
@@ -10,7 +8,6 @@ import li.allan.json.JacksonImpl;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -46,17 +43,17 @@ class UAData {
         return getInstance().userAgentMap;
     }
 
-    public static Map<String[], OperationSystem> getOperationSystemMap() {
-        return getInstance().operationSystemMap;
+    public static Map<String[], OS> getOSMap() {
+        return getInstance().OSMap;
     }
 
-    public static Map<String, Map<String, Version>> getOperationSystemVersionAliasMap() {
-        return getInstance().operationSystemVersionAliasMap;
+    public static Map<String, Map<String, Version>> getOSVersionAliasMap() {
+        return getInstance().OSVersionAliasMap;
     }
 
     private Map<String[], UserAgent> userAgentMap;//Map<regex[], useragent>
-    private Map<String[], OperationSystem> operationSystemMap;//Map<regex[],os>
-    private Map<String, Map<String, Version>> operationSystemVersionAliasMap;//Map<osName, Map<versionRegex,Version>>
+    private Map<String[], OS> OSMap;//Map<regex[],os>
+    private Map<String, Map<String, Version>> OSVersionAliasMap;//Map<osName, Map<versionRegex,Version>>
 
     private static String readFromResources(String path) throws IOException {
         InputStream inputStream = ClassLoader.getSystemResourceAsStream(path);
@@ -70,27 +67,19 @@ class UAData {
         return new String(outStream.toByteArray(), "UTF-8");
     }
 
-    private void parseByGson(String source) throws IOException {
-        Type mapType = new TypeToken<Map<String, List<Map<String, String>>>>() {
-        }.getType();
-        Map<String, List<Map<String, String>>> data = new Gson().fromJson(source, mapType);
-        load(data);
-    }
-
     private void load(Map<String, List<Map<String, String>>> data) {
-        //browserType
+        //agentType
         Map<Integer, BrowserType> browserTypeMap = new HashMap<Integer, BrowserType>();
-        for (int i = 0; i < data.get("browserType").size(); i++) {
-            Map<String, String> tmp = data.get("browserType").get(i);
-            System.out.print(Integer.valueOf(tmp.get("id")));
+        for (int i = 0; i < data.get("agentType").size(); i++) {
+            Map<String, String> tmp = data.get("agentType").get(i);
             browserTypeMap.put(Integer.valueOf(tmp.get("id")), new BrowserType(Integer.valueOf(tmp.get("id")), tmp.get("name")));
         }
-        //browser
+        //agent
         userAgentMap = new LinkedHashMap<String[], UserAgent>();
-        for (int i = 0; i < data.get("browser").size(); i++) {
-            Map<String, String> tmp = data.get("browser").get(i);
+        for (int i = 0; i < data.get("agent").size(); i++) {
+            Map<String, String> tmp = data.get("agent").get(i);
             String[] regexs = tmp.get("regex").toString().split("\\|\\|\\|\\|");
-            UserAgent b = new UserAgent(tmp.get("name"), browserTypeMap.get(tmp.get("browserType")), tmp.get("homepage"));
+            UserAgent b = new UserAgent(tmp.get("name"), browserTypeMap.get(tmp.get("type")), tmp.get("homepage"));
             userAgentMap.put(regexs, b);
         }
         //deviceType
@@ -99,23 +88,23 @@ class UAData {
             Map<String, String> tmp = data.get("deviceType").get(i);
             deviceTypeMap.put(Integer.valueOf(tmp.get("id")), new DeviceType(Integer.valueOf(tmp.get("id")), (String) tmp.get("name")));
         }
-        //operationSystem
-        operationSystemMap = new LinkedHashMap<String[], OperationSystem>();
-        for (int i = 0; i < data.get("operationSystem").size(); i++) {
-            Map<String, String> tmp = data.get("operationSystem").get(i);
+        //OS
+        OSMap = new LinkedHashMap<String[], OS>();
+        for (int i = 0; i < data.get("os").size(); i++) {
+            Map<String, String> tmp = data.get("os").get(i);
             String[] regexs = tmp.get("regex").toString().split("\\|\\|\\|\\|");
-            OperationSystem os = new OperationSystem(tmp.get("name"), deviceTypeMap.get(tmp.get("deviceType")));
-            operationSystemMap.put(regexs, os);
+            OS os = new OS(tmp.get("name"), deviceTypeMap.get(tmp.get("deviceType")));
+            OSMap.put(regexs, os);
         }
-        //operationSystem version alias
-        operationSystemVersionAliasMap = new HashMap<String, Map<String, Version>>();
-        for (int i = 0; i < data.get("operationSystemVersionAliases").size(); i++) {
-            Map<String, String> tmp = data.get("operationSystemVersionAliases").get(i);
-            if (!operationSystemVersionAliasMap.containsKey(tmp.get("os"))) {
-                operationSystemVersionAliasMap.put(tmp.get("os"), new HashMap<String, Version>());
+        //OS version alias
+        OSVersionAliasMap = new HashMap<String, Map<String, Version>>();
+        for (int i = 0; i < data.get("oSVersionAliases").size(); i++) {
+            Map<String, String> tmp = data.get("oSVersionAliases").get(i);
+            if (!OSVersionAliasMap.containsKey(tmp.get("os"))) {
+                OSVersionAliasMap.put(tmp.get("os"), new HashMap<String, Version>());
             }
             Version version = new Version(tmp.get("major"), tmp.get("minor"), tmp.get("revision"));
-            operationSystemVersionAliasMap.get(tmp.get("os")).put(tmp.get("regex"), version);
+            OSVersionAliasMap.get(tmp.get("os")).put(tmp.get("regex"), version);
         }
     }
 
