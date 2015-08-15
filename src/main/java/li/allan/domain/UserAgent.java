@@ -15,7 +15,7 @@ public class UserAgent implements Cloneable {
     }
 
     public static UserAgent known() {
-        return new UserAgent(Constants.KNOWN, null, null);
+        return new UserAgent(Constants.UNKNOWN, null, null);
     }
 
     public String getName() {

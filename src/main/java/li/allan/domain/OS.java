@@ -13,7 +13,7 @@ public class OS implements Cloneable {
     }
 
     public static OS known() {
-        return new OS(Constants.KNOWN, null);
+        return new OS(Constants.UNKNOWN, null);
     }
 
     public String getName() {
