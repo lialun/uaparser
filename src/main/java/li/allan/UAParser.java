@@ -9,7 +9,9 @@ import li.allan.utils.RegexUtils;
 import java.util.Map;
 
 public class UAParser {
-
+    public static void main(String[] args) {
+        System.out.println(parse("User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12F70"));
+    }
     public static Client parse(String agentString) {
         OS OS = parseOperationSystem(agentString);
         UserAgent userAgent = parseBrowser(agentString);
